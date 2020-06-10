@@ -135,6 +135,7 @@ document.addEventListener("DOMContentLoaded", ()=>{
     
     
     // Function to make the tetromino move down the canvas by a factor of the width(10)
+    // this function clears the shape, moves down the canvas, redraws it and stops only when shape reaches bottom
     function moveDown(){
     
       undraw()
