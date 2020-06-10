@@ -31,7 +31,7 @@ This game will follow the basic rules of tetris
 - The user's objective is to get the highest score they can.
 
 
-<!-- 
+
 #### Controls
 
 - As the tetromino descends, the user has the ability to move it across the field or change the orientation of the shape
@@ -50,7 +50,7 @@ This game will follow the basic rules of tetris
 * Preview: To the right of the main game field is a preview screen that shows the next randomly generated tetromino that will enter the game
 
 
-#### Potential Features
+<!-- #### Potential Features
 
 - These are features that may be added to gameplay
 
