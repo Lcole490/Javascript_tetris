@@ -50,7 +50,7 @@ This game will follow the basic rules of tetris
 * Preview: To the right of the main game field is a preview screen that shows the next randomly generated tetromino that will enter the game
 
 
-<!-- #### Potential Features
+#### Potential Features
 
 - These are features that may be added to gameplay
 
@@ -58,4 +58,4 @@ This game will follow the basic rules of tetris
 
 * Bank: Allows user to save a piece to be used at a later time in the game
 
-* Detonate: A random tetromino (either a unique shape or color) will clear a set area in the field of play to clear some of the board -->
+* Detonate: A random tetromino (either a unique shape or color) will clear a set area in the field of play to clear some of the board
