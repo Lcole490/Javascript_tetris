@@ -20,4 +20,17 @@
   }
   
   
+  .tetromino{
+    background-color: rgba(15, 15, 65, 0.432);
+  }
   
+  
+  .mini-grid{
+    margin-left: 50px;
+    width: 80px;
+    height: 80px;
+    display: flex;
+    flex-wrap: wrap;
+    background-color: rgba(189, 174, 39, 0.842);
+    
+  }
