@@ -18,7 +18,7 @@ A fun way to practice javascript principles by recreating a classic game of Tetr
 * Keycodes and Events
 
 
-<!-- 
+
 ### Gameplay
 
 This game will follow the basic rules of tetris
@@ -31,7 +31,7 @@ This game will follow the basic rules of tetris
 - The user's objective is to get the highest score they can.
 
 
-
+<!-- 
 #### Controls
 
 - As the tetromino descends, the user has the ability to move it across the field or change the orientation of the shape
