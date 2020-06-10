@@ -89,17 +89,15 @@ document.addEventListener("DOMContentLoaded", ()=>{
     let currentPosition = 4;
     
 
-    // Current Rotation is the selected orientation of the tetromino 
-    let currentRotation = 0;
     
     
     // Current gives the newest tetromino and is generated from the "All tetrominoes array"
     // the first [] below chooses the tetromino shape while the second [] chooses the orientation which is 1 of 4 within the tetromino shape array
     let random = Math.floor(Math.random()*allTetrominoes.length)
-    let randomconfig =Math.floor(Math.random()*allTetrominoes[random].length)
+    let currentRotation =Math.floor(Math.random()*allTetrominoes[random].length)
     console.log(random);
-    console.log(randomconfig);
-    let current = allTetrominoes [random][randomconfig] // This is the chosen tetromino that will enter gameplay
+    console.log(currentRotation);
+    let current = allTetrominoes [random][currentRotation] // This is the chosen tetromino that will enter gameplay
     
     
     
@@ -143,9 +141,13 @@ document.addEventListener("DOMContentLoaded", ()=>{
       draw()
       freeze()
     }
+
+
+
     
     
     // assign control functions to keyCodes
+    // if a certain keycode is applied, it invokes an associated function
     function control(e){
       if(e.keyCode ===37){
       moveLeft()
@@ -158,8 +160,16 @@ document.addEventListener("DOMContentLoaded", ()=>{
     }
     }
     
+
+    // This is the trigger for the CONTROL function, it actively listens out for keycode being keyed down and invokes the control function
     document.addEventListener("keydown", control)
     
+
+
+    // The freeze function determines when a tetromino has reached the bottom of the playing field
+    // If any index of the current array has has a class of "taken", then the current position squares are also given the taken class
+
+
     function freeze(){
       if(current.some(index => squares[currentPosition + index + width].classList.contains("taken"))){
         current.forEach(index => squares[currentPosition + index].classList.add("taken"))
