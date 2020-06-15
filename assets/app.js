@@ -1,293 +1,253 @@
 
-// Starts app as soon as page is loaded completely
-document.addEventListener("DOMContentLoaded", ()=>{
-
-
-//  V A R I A B L E S
-
-    const grid =document.querySelector(".grid");
-    let squares = Array.from(document.querySelectorAll(".grid div")) // Creates an array from the divs of class grid
-    const width = 10; // defines width of the gamefield (10 divs  or squares per row)
-    const ScoreDisplay = document.querySelector("#score");  // this is where the score id will be updated
-    const StartBtn = document.querySelector("#start-button"); // Game start button defined
-    let nextRandom = 0;    // initialization of nextRandom variable that allows for previews of upcoming game pieces
-    
-    
-    
-    
-    console.log()
-    
-    
-    // T H E _ _ T E T R O M I N O E S
-    // Each tetromino is an array of the divs(squares) that create the shape when background color is added to each square specifically
-    // Each index of the array represents a configuration or rotation of  the same shape
-    
-    const lTetromino = [                        // l-tetromino
+document.addEventListener('DOMContentLoaded', () => {
+    const grid = document.querySelector('.grid')
+    let squares = Array.from(document.querySelectorAll('.grid div'))
+    const scoreDisplay = document.querySelector('#score')
+    const startBtn = document.querySelector('#start-button')
+    const width = 10
+    let nextRandom = 0
+    let timerId
+    let score = 0
+    const colors = [
+      'orange',
+      'red',
+      'purple',
+      'green',
+      'blue'
+    ]
+  
+    //The Tetrominoes
+    const lTetromino = [
       [1, width+1, width*2+1, 2],
       [width, width+1, width+2, width*2+2],
       [1, width+1, width*2+1, width*2],
       [width, width*2, width*2+1, width*2+2]
-    ];
-    
-    
-    const lTetrominoAlt = [                     // Alternate configuration of l-tetromino
-      [1, width+1, width*2+1, 0],
-      [width, width+1, width+2, 2],
-      [1, width+1, width*2+1, width],
-      [width, width*2, width+1, width+2]
-    ];
-    
-    
-      const zTetromino = [                      // z-Tetromino
-        [0,width,width+1,width*2+1],
-        [width+1, width+2,width*2,width*2+1],
-        [0,width,width+1,width*2+1],
-        [width+1, width+2,width*2,width*2+1]
-      ];
-    
-      const zTetrominoAlt= [                      // Alternate configuration of z-Tetromino
-        [ 2, width+2, width+1, width*2+1],
-        [width, width+1, width*2+1, width*2+2],
-        [ 2, width+2, width+1, width*2+1],
-        [width, width+1, width*2+1, width*2+2]
-      ];
-    
-    
-    
-      const tTetromino = [                          // t-Tetromino
-        [1,width,width+1,width+2],
-        [1,width+1,width+2,width*2+1],
-        [width,width+1,width+2,width*2+1],
-        [1,width,width+1,width*2+1]
-      ];
-    
-      const oTetromino = [                          // o-Tetromino
-        [0,1,width,width+1],
-        [0,1,width,width+1],
-        [0,1,width,width+1],
-        [0,1,width,width+1]
-      ];
-    
-      const iTetromino = [                              // i-Tetromino
-        [1,width+1,width*2+1,width*3+1],
-        [width,width+1,width+2,width+3],
-        [1,width+1,width*2+1,width*3+1],
-        [width,width+1,width+2,width+3]
-      ];
-    
-    
-    
-    
-    // Array of all tetromino shapes, this is where the game randomly picks a shape to display in the game screen and preview screen
-      const allTetrominoes = [lTetromino, lTetrominoAlt, iTetromino, oTetromino, zTetromino, zTetrominoAlt, tTetromino];
-    
-    
-      
-    
-    
-    // Current position is the starting point of the tetromino when it enters the arena of play
-    let currentPosition = 4;
-    
-
-    
-    
-    // Current gives the newest tetromino and is generated from the "All tetrominoes array"
-    // the first [] below chooses the tetromino shape while the second [] chooses the orientation which is 1 of 4 within the tetromino shape array
-    let random = Math.floor(Math.random()*allTetrominoes.length)
-    let currentRotation =Math.floor(Math.random()*allTetrominoes[random].length)
-    console.log(random);
-    console.log(currentRotation);
-    let current = allTetrominoes [random][currentRotation] // This is the chosen tetromino that will enter gameplay
-    
-    
-    
-    
-    
-    
-    // Forms the tetromino that was chosen above
-    // for each index of array current, add the tetromino class to the corresponding squares in order to draw shape
-    function draw() { 
+    ]
+  
+    const zTetromino = [
+      [0,width,width+1,width*2+1],
+      [width+1, width+2,width*2,width*2+1],
+      [0,width,width+1,width*2+1],
+      [width+1, width+2,width*2,width*2+1]
+    ]
+  
+    const tTetromino = [
+      [1,width,width+1,width+2],
+      [1,width+1,width+2,width*2+1],
+      [width,width+1,width+2,width*2+1],
+      [1,width,width+1,width*2+1]
+    ]
+  
+    const oTetromino = [
+      [0,1,width,width+1],
+      [0,1,width,width+1],
+      [0,1,width,width+1],
+      [0,1,width,width+1]
+    ]
+  
+    const iTetromino = [
+      [1,width+1,width*2+1,width*3+1],
+      [width,width+1,width+2,width+3],
+      [1,width+1,width*2+1,width*3+1],
+      [width,width+1,width+2,width+3]
+    ]
+  
+    const theTetrominoes = [lTetromino, zTetromino, tTetromino, oTetromino, iTetromino]
+  
+    let currentPosition = 4
+    let currentRotation = 0
+  
+    console.log(theTetrominoes[0][0])
+  
+    //randomly select a Tetromino and its first rotation
+    let random = Math.floor(Math.random()*theTetrominoes.length)
+    let current = theTetrominoes[random][currentRotation]
+  
+    //draw the Tetromino
+    function draw() {
       current.forEach(index => {
-        squares[currentPosition + index].classList.add("tetromino")
+        squares[currentPosition + index].classList.add('tetromino')
+        squares[currentPosition + index].style.backgroundColor = colors[random]
       })
     }
-    
-    
-    
-    
-    
-    // Erases the drawn tetromino to make the canvas clear as the tetromino moves
-    // for each index of array current, remove the tetromino class from the corresponding squares in order to clear shape
+  
+    //undraw the Tetromino
     function undraw() {
-      current.forEach (index =>{
-        squares[currentPosition + index].classList.remove("tetromino")
+      current.forEach(index => {
+        squares[currentPosition + index].classList.remove('tetromino')
+        squares[currentPosition + index].style.backgroundColor = ''
+  
       })
     }
-    
-    
-    
-    
-    // Make the tetromino move down every second
-    
-    timerId = setInterval(moveDown, 1000)
-    
-    
-    // Function to make the tetromino move down the canvas by a factor of the width(10)
-    // this function clears the shape, moves down the canvas, redraws it and stops only when shape reaches bottom
-    function moveDown(){
-    
+  
+    //assign functions to keyCodes
+    function control(e) {
+      if(e.keyCode === 37) {
+        moveLeft()
+      } else if (e.keyCode === 38) {
+        rotate()
+      } else if (e.keyCode === 39) {
+        moveRight()
+      } else if (e.keyCode === 40) {
+        moveDown()
+      }
+    }
+    document.addEventListener('keyup', control)
+  
+    //move down function
+    function moveDown() {
       undraw()
       currentPosition += width
       draw()
       freeze()
     }
-
-
-
-    
-    
-    // assign control functions to keyCodes
-    // if a certain keycode is applied, it invokes an associated function
-    function control(e){
-      if(e.keyCode ===37){
-      moveLeft()
-    } else if (e.keyCode === 38){
-      rotate()
-    } else if (e.keyCode === 39) {
-      moveRight()
-    } else if (e.keyCode === 40){
-      moveDown()
-    }
-    }
-    
-
-    // This is the trigger for the CONTROL function, it actively listens out for keycode being keyed down and invokes the control function
-    document.addEventListener("keydown", control)
-    
-
-
-    // The freeze function determines when a tetromino has reached the bottom of the playing field
-    // If any index of the current array has has a class of "taken", then the current position squares are also given the taken class
-
-
-    function freeze(){
-      if(current.some(index => squares[currentPosition + index + width].classList.contains("taken"))){
-        current.forEach(index => squares[currentPosition + index].classList.add("taken"))
-    
-        // Start a new Tetromino
-        random= nextRandom
-        nextRandom = Math.floor(Math.random()*allTetrominoes.length)
-        current = allTetrominoes[random][currentRotation]
+  
+    //freeze function
+    function freeze() {
+      if(current.some(index => squares[currentPosition + index + width].classList.contains('taken'))) {
+        current.forEach(index => squares[currentPosition + index].classList.add('taken'))
+        //start a new tetromino falling
+        random = nextRandom
+        nextRandom = Math.floor(Math.random() * theTetrominoes.length)
+        current = theTetrominoes[random][currentRotation]
         currentPosition = 4
-    
         draw()
-        previewShape()
+        displayShape()
+        addScore()
+        gameOver()
+      }
+    }
+  
+    //move the tetromino left, unless is at the edge or there is a blockage
+    function moveLeft() {
+      undraw()
+      const isAtLeftEdge = current.some(index => (currentPosition + index) % width === 0)
+      if(!isAtLeftEdge) currentPosition -=1
+      if(current.some(index => squares[currentPosition + index].classList.contains('taken'))) {
+        currentPosition +=1
+      }
+      draw()
+    }
+  
+    //move the tetromino right, unless is at the edge or there is a blockage
+    function moveRight() {
+      undraw()
+      const isAtRightEdge = current.some(index => (currentPosition + index) % width === width -1)
+      if(!isAtRightEdge) currentPosition +=1
+      if(current.some(index => squares[currentPosition + index].classList.contains('taken'))) {
+        currentPosition -=1
+      }
+      draw()
+    }
+  
+    
+    ///FIX ROTATION OF TETROMINOS A THE EDGE 
+    function isAtRight() {
+      return current.some(index=> (currentPosition + index + 1) % width === 0)  
+    }
+    
+    function isAtLeft() {
+      return current.some(index=> (currentPosition + index) % width === 0)
+    }
+    
+    function checkRotatedPosition(P){
+      P = P || currentPosition       //get current position.  Then, check if the piece is near the left side.
+      if ((P+1) % width < 4) {         //add 1 because the position index can be 1 less than where the piece is (with how they are indexed).     
+        if (isAtRight()){            //use actual position to check if it's flipped over to right side
+          currentPosition += 1    //if so, add one to wrap it back around
+          checkRotatedPosition(P) //check again.  Pass position from start, since long block might need to move more.
+          }
+      }
+      else if (P % width > 5) {
+        if (isAtLeft()){
+          currentPosition -= 1
+        checkRotatedPosition(P)
+        }
       }
     }
     
-    
-    
-    
-    
-    
-    
-    // Move the tetromino left, unless it is at the edge or is blocked by another tetromino
-    function moveLeft(){
-      undraw()
-      const isAtLeftEdge = current.some(index =>(currentPosition + index)% width === 0)
-    
-      if(!isAtLeftEdge) currentPosition -=1
-    
-      if(current.some(index => squares[currentPosition + index].classList.contains("taken")))
-      currentPosition +=1
-    
-      draw()
-    }
-    
-    
-    
-    
-    // Move the tetromino right, unless it is at the right edge or is blocked by another tetromino
-    function moveRight(){
-      undraw()
-      const isAtRightEdge = current.some(index =>(currentPosition + index)% width === width-1)
-    
-      if(!isAtRightEdge) currentPosition +=1
-    
-      if(current.some(index => squares[currentPosition + index].classList.contains("taken")))
-      currentPosition -=1
-    
-      draw()
-    }
-    
-    
-    
-    // Rotate the orientation of the tetromino
-    function rotate(){
+    //rotate the tetromino
+    function rotate() {
       undraw()
       currentRotation ++
-      if(currentRotation === current.length){
+      if(currentRotation === current.length) { //if the current rotation gets to 4, make it go back to 0
         currentRotation = 0
       }
-      current = allTetrominoes[random][currentRotation]
+      current = theTetrominoes[random][currentRotation]
+      checkRotatedPosition()
       draw()
     }
+    /////////
+  
     
     
-    
-    
-    // Show player what the next tetromino will below
-    const displaySquares = document.querySelectorAll(".mini-grid div")
+    //show up-next tetromino in mini-grid display
+    const displaySquares = document.querySelectorAll('.mini-grid div')
     const displayWidth = 4
-    let displayIndex = 0
-    
-    
-    
-    // Show the future tetrominoes in original orientation only
-    const onDeckTetrominoes = [
+    const displayIndex = 0
+  
+  
+    //the Tetrominos without rotations
+    const upNextTetrominoes = [
       [1, displayWidth+1, displayWidth*2+1, 2], //lTetromino
       [0, displayWidth, displayWidth+1, displayWidth*2+1], //zTetromino
-      [1, displayWidth, displayWidth+1, displayWidth*2],//tTetromino
-      [0, 1, displayWidth, displayWidth+1],// oTetromino
+      [1, displayWidth, displayWidth+1, displayWidth+2], //tTetromino
+      [0, 1, displayWidth, displayWidth+1], //oTetromino
       [1, displayWidth+1, displayWidth*2+1, displayWidth*3+1] //iTetromino
     ]
-    
-    
-    
-    // Display the future tetromino shape in the mini-grid display
-    function previewShape(){
-    
-    displaySquares.forEach(square =>{
-      square.classList.remove("tetromino")
-    
-    })
-    onDeckTetrominoes[nextRandom].forEach( index => {
-      displaySquares[displayIndex + index].classList.add("tetromino")
-    })
-    
+  
+    //display the shape in the mini-grid display
+    function displayShape() {
+      //remove any trace of a tetromino form the entire grid
+      displaySquares.forEach(square => {
+        square.classList.remove('tetromino')
+        square.style.backgroundColor = ''
+      })
+      upNextTetrominoes[nextRandom].forEach( index => {
+        displaySquares[displayIndex + index].classList.add('tetromino')
+        displaySquares[displayIndex + index].style.backgroundColor = colors[nextRandom]
+      })
     }
-    
-    
-    // Button functionality
-    StartBtn.addEventListener("click", ()=> {
-      if (timerId){
+  
+    //add functionality to the button
+    startBtn.addEventListener('click', () => {
+      if (timerId) {
         clearInterval(timerId)
-        timerId=null
-      }else{
+        timerId = null
+      } else {
         draw()
         timerId = setInterval(moveDown, 1000)
+        nextRandom = Math.floor(Math.random()*theTetrominoes.length)
+        displayShape()
       }
     })
-    
-    
-    undraw();
-    
-    
-    console.log(squares);
-    console.log(allTetrominoes [6][3])
-    
-    
-    
-    
-    
-    })
+  
+    //add score
+    function addScore() {
+      for (let i = 0; i < 199; i +=width) {
+        const row = [i, i+1, i+2, i+3, i+4, i+5, i+6, i+7, i+8, i+9]
+  
+        if(row.every(index => squares[index].classList.contains('taken'))) {
+          score +=10
+          scoreDisplay.innerHTML = score
+          row.forEach(index => {
+            squares[index].classList.remove('taken')
+            squares[index].classList.remove('tetromino')
+            squares[index].style.backgroundColor = ''
+          })
+          const squaresRemoved = squares.splice(i, width)
+          squares = squaresRemoved.concat(squares)
+          squares.forEach(cell => grid.appendChild(cell))
+        }
+      }
+    }
+  
+    //game over
+    function gameOver() {
+      if(current.some(index => squares[currentPosition + index].classList.contains('taken'))) {
+        scoreDisplay.innerHTML = 'end'
+        clearInterval(timerId)
+      }
+    }
+  
+  })
